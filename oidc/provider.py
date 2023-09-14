@@ -41,6 +41,12 @@ class OIDCProvider(OAuth2Provider):
     client_id = CLIENT_ID
     client_secret = CLIENT_SECRET
 
+    def get_client_id(self):
+        return CLIENT_ID
+
+    def get_client_secret(self):
+        return CLIENT_SECRET
+
     def __init__(self, domain=None, domains=None, version=None, **config):
         if domain:
             if domains:
@@ -64,11 +70,11 @@ class OIDCProvider(OAuth2Provider):
 
     def get_auth_pipeline(self):
         return [
-            OIDCLogin(self.client_id, domains=self.domains),
+            OIDCLogin(self.get_client_id(), domains=self.domains),
             OAuth2Callback(
                 access_token_url=TOKEN_ENDPOINT,
-                client_id=self.client_id,
-                client_secret=self.client_secret,
+                client_id=self.get_client_id(),
+                client_secret=self.get_client_secret(),
             ),
             FetchUser(
                 domains=self.domains,
